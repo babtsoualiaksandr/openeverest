@@ -115,6 +115,7 @@ local('[ -x %s/bin/kustomize ] || make -C %s kustomize' % (operator_dir, operato
 # Create namespace
 load('ext://namespace', 'namespace_create', 'namespace_inject')
 namespace_create(EVEREST_NAMESPACE)
+namespace_create(EVEREST_MONITORING_NAMESPACE)
 k8s_resource(
   objects=[
     '{0}:namespace'.format(EVEREST_NAMESPACE)
@@ -512,7 +513,7 @@ k8s_yaml(everest_yaml)
 
 k8s_resource(
   objects=[
-    '{0}:namespace'.format(EVEREST_MONITORING_NAMESPACE)
+    '{0}:namespace:default'.format(EVEREST_MONITORING_NAMESPACE)
   ],
   new_name='everest-monitoring-namespace',
 )
