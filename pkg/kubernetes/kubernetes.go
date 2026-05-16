@@ -232,7 +232,7 @@ func (k *Kubernetes) WithKubernetesClient(c ctrlclient.Client) *Kubernetes {
 
 // Namespace returns the Everest system namespace.
 func (k *Kubernetes) Namespace() string {
-	return common.SystemNamespace
+	return common.GetSystemNamespace()
 }
 
 // GetEverestID returns the ID of the namespace where everest is deployed.

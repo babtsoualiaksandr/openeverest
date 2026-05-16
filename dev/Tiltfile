@@ -3,13 +3,12 @@ def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
 
 # ===========================
-# CONSTANTS
-EVEREST_NAMESPACE = 'everest-system'
-EVEREST_MONITORING_NAMESPACE = 'everest-monitoring'
-UI_ADMIN_PASSWORD = 'admin'
-
-# Load Config
+# Load Config first (needed for namespace settings)
 config_yaml=read_yaml('config.yaml')
+# CONSTANTS
+EVEREST_NAMESPACE = config_yaml.get('everestNamespace', 'everest-system')
+EVEREST_MONITORING_NAMESPACE = config_yaml.get('monitoringNamespace', 'everest-monitoring')
+UI_ADMIN_PASSWORD = 'admin'
 
 # Load local Envfile with env vars
 load('ext://dotenv', 'dotenv')
@@ -453,6 +452,7 @@ everest_yaml = helm(
         'monitoring.crds.enabled=true',
         'monitoring.crds.plain=false',
         'monitoring.namespaceOverride={0}'.format(EVEREST_MONITORING_NAMESPACE),
+        'kube-state-metrics.namespaceOverride={0}'.format(EVEREST_MONITORING_NAMESPACE),
         'server.initialAdminPassword={0}'.format(UI_ADMIN_PASSWORD),
     ],
 )

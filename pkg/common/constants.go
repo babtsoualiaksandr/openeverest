@@ -16,7 +16,27 @@
 // Package common holds common constants used across Everest.
 package common
 
-import everestv1alpha1 "github.com/percona/everest-operator/api/everest/v1alpha1"
+import (
+	"os"
+
+	everestv1alpha1 "github.com/percona/everest-operator/api/everest/v1alpha1"
+)
+
+// GetSystemNamespace returns the system namespace from env or default.
+func GetSystemNamespace() string {
+	if ns := os.Getenv("EVEREST_NAMESPACE"); ns != "" {
+		return ns
+	}
+	return "everest-system"
+}
+
+// GetMonitoringNamespace returns the monitoring namespace from env or default.
+func GetMonitoringNamespace() string {
+	if ns := os.Getenv("EVEREST_MONITORING_NAMESPACE"); ns != "" {
+		return ns
+	}
+	return "everest-monitoring"
+}
 
 const (
 	// Everest ...
@@ -40,9 +60,9 @@ const (
 	// DefaultDBNamespaceName is the name of the default DB namespace during installation.
 	DefaultDBNamespaceName = "everest"
 	// SystemNamespace is the namespace where everest is installed.
-	SystemNamespace = "everest-system"
+	SystemNamespace = "everest-system" // Deprecated: use GetSystemNamespace()
 	// MonitoringNamespace is the namespace where monitoring configs are created.
-	MonitoringNamespace = "everest-monitoring"
+	MonitoringNamespace = "everest-monitoring" // Deprecated: use GetMonitoringNamespace()
 	// PerconaEverestDeploymentName stores the name of everest API Server deployment.
 	PerconaEverestDeploymentName = "everest-server"
 	// PerconaEverestDeploymentNameLegacy stores the legacy name (> 1.4.0) of everest API Server deployment.

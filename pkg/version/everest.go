@@ -36,7 +36,7 @@ type deploymentGetter interface {
 
 // EverestVersionFromDeployment returns Everest version from the k8s deployment resource.
 func EverestVersionFromDeployment(ctx context.Context, dg deploymentGetter) (*goversion.Version, error) {
-	dep, err := dg.GetDeployment(ctx, types.NamespacedName{Namespace: common.SystemNamespace, Name: common.PerconaEverestDeploymentName})
+	dep, err := dg.GetDeployment(ctx, types.NamespacedName{Namespace: common.GetSystemNamespace(), Name: common.PerconaEverestDeploymentName})
 	// Ignore not found error, we will try again with legacy name.
 	if ctrlclient.IgnoreNotFound(err) != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func EverestVersionFromDeployment(ctx context.Context, dg deploymentGetter) (*go
 
 	// If the deployment is not found, try to get it with the legacy name.
 	if dep == nil || dep.GetCreationTimestamp().Time.IsZero() {
-		dep, err = dg.GetDeployment(ctx, types.NamespacedName{Namespace: common.SystemNamespace, Name: common.PerconaEverestDeploymentNameLegacy})
+		dep, err = dg.GetDeployment(ctx, types.NamespacedName{Namespace: common.GetSystemNamespace(), Name: common.PerconaEverestDeploymentNameLegacy})
 		if err != nil {
 			return nil, err
 		}

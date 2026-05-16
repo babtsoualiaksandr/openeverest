@@ -271,7 +271,7 @@ func ClientCacheOptions() *cache.Options {
 				Field: fields.SelectorFromSet(fields.Set{"metadata.name": common.EverestAccountsSecretName}),
 			},
 			&corev1.Namespace{}: {
-				Field: fields.SelectorFromSet(fields.Set{"metadata.name": common.SystemNamespace}),
+				Field: fields.SelectorFromSet(fields.Set{"metadata.name": common.GetSystemNamespace()}),
 			},
 		},
 	}

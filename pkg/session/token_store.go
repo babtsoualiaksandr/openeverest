@@ -60,12 +60,12 @@ func newTokenStore(ctx context.Context, client TokenStoreClient, logger *zap.Sug
 }
 
 func (ts *tokenStore) init(ctx context.Context) error {
-	_, err := ts.client.GetSecret(ctx, types.NamespacedName{Namespace: common.SystemNamespace, Name: common.EverestBlocklistSecretName})
+	_, err := ts.client.GetSecret(ctx, types.NamespacedName{Namespace: common.GetSystemNamespace(), Name: common.EverestBlocklistSecretName})
 	if err == nil {
 		return err
 	}
 	if !k8serrors.IsNotFound(err) {
-		err = fmt.Errorf("failed to get %s secret in the %s namespace: %w", common.EverestBlocklistSecretName, common.SystemNamespace, err)
+		err = fmt.Errorf("failed to get %s secret in the %s namespace: %w", common.EverestBlocklistSecretName, common.GetSystemNamespace(), err)
 		ts.l.Error(err)
 		return err
 	}
@@ -87,9 +87,9 @@ type tokenStore struct {
 
 // Add adds the shortened token to the blocklist
 func (ts *tokenStore) Add(ctx context.Context, shortenedToken string) error {
-	secret, err := ts.client.GetSecret(ctx, types.NamespacedName{Namespace: common.SystemNamespace, Name: common.EverestBlocklistSecretName})
+	secret, err := ts.client.GetSecret(ctx, types.NamespacedName{Namespace: common.GetSystemNamespace(), Name: common.EverestBlocklistSecretName})
 	if err != nil {
-		ts.l.Errorf("failed to get %s secret in the %s namespace: %v", common.EverestBlocklistSecretName, common.SystemNamespace, err)
+		ts.l.Errorf("failed to get %s secret in the %s namespace: %v", common.EverestBlocklistSecretName, common.GetSystemNamespace(), err)
 		return err
 	}
 
@@ -105,9 +105,9 @@ func (ts *tokenStore) Add(ctx context.Context, shortenedToken string) error {
 // Exists checks if the shortened token is in the blocklist
 func (ts *tokenStore) Exists(ctx context.Context, shortenedToken string) (bool, error) {
 	// no worries about overwhelming k8s API - the secret is cached
-	secret, err := ts.client.GetSecret(ctx, types.NamespacedName{Namespace: common.SystemNamespace, Name: common.EverestBlocklistSecretName})
+	secret, err := ts.client.GetSecret(ctx, types.NamespacedName{Namespace: common.GetSystemNamespace(), Name: common.EverestBlocklistSecretName})
 	if err != nil {
-		ts.l.Errorf("failed to get %s secret in the %s namespace: %v", common.EverestBlocklistSecretName, common.SystemNamespace, err)
+		ts.l.Errorf("failed to get %s secret in the %s namespace: %v", common.EverestBlocklistSecretName, common.GetSystemNamespace(), err)
 		return false, err
 	}
 	list, ok := secret.Data[dataKey]
@@ -161,7 +161,7 @@ func getBlockListSecretTemplate(stringData string) *corev1.Secret {
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      common.EverestBlocklistSecretName,
-			Namespace: common.SystemNamespace,
+			Namespace: common.GetSystemNamespace(),
 		},
 		StringData: map[string]string{
 			dataKey: stringData,

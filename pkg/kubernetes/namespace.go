@@ -51,7 +51,7 @@ func (k *Kubernetes) GetDBNamespaces(ctx context.Context, opts ...ctrlclient.Lis
 		return nil, errors.Join(err, errors.New("failed to get managed namespaces"))
 	}
 
-	internalNs := []string{common.SystemNamespace, common.MonitoringNamespace}
+	internalNs := []string{common.GetSystemNamespace(), common.GetMonitoringNamespace()}
 	// filter out Everest system and monitoring namespaces.
 	result.Items = slices.DeleteFunc(result.Items, func(ns corev1.Namespace) bool {
 		return slices.Contains(internalNs, ns.Name)
