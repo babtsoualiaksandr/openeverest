@@ -16,7 +16,7 @@
 import { SettingsTabs } from './settings.types';
 
 const tabLabels: Record<keyof typeof SettingsTabs, string> = {
-  storageLocations: 'Backups storages',
+  storageLocations: 'Backups from bobruisk',
   monitoringEndpoints: 'Monitoring endpoints',
   namespaces: 'Namespaces',
   policies: 'Policies & Configurations',
